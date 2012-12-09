@@ -126,9 +126,12 @@ public interface Phone {
     int NT_MODE_EVDO_NO_CDMA = RILConstants.NETWORK_MODE_EVDO_NO_CDMA;
     int NT_MODE_GLOBAL       = RILConstants.NETWORK_MODE_GLOBAL;
 
-    int NT_MODE_LTE_ONLY     = RILConstants.NETWORK_MODE_LTE_ONLY;
-    int PREFERRED_NT_MODE    = RILConstants.PREFERRED_NETWORK_MODE;
-
+    int NT_MODE_LTE_CDMA_AND_EVDO        = RILConstants.NETWORK_MODE_LTE_CDMA_EVDO;
+    int NT_MODE_LTE_GSM_WCDMA            = RILConstants.NETWORK_MODE_LTE_GSM_WCDMA;
+    int NT_MODE_LTE_CMDA_EVDO_GSM_WCDMA  = RILConstants.NETWORK_MODE_LTE_CMDA_EVDO_GSM_WCDMA;
+    int NT_MODE_LTE_ONLY                 = RILConstants.NETWORK_MODE_LTE_ONLY;
+    int NT_MODE_LTE_WCDMA                = RILConstants.NETWORK_MODE_LTE_WCDMA;
+    int PREFERRED_NT_MODE                = RILConstants.PREFERRED_NETWORK_MODE;
 
     // Used for CDMA roaming mode
     static final int CDMA_RM_HOME        = 0;  // Home Networks only, as defined in PRL
@@ -1645,6 +1648,12 @@ public interface Phone {
      * @return {@link #LTE_ON_CDMA_UNKNOWN}, {@link #LTE_ON_CDMA_FALSE} or {@link #LTE_ON_CDMA_TRUE}
      */
     public int getLteOnCdmaMode();
+
+    /**
+     * Return if the current radio is LTE on GSM
+     * @hide
+     */
+    public int getLteOnGsmMode();
 
     /**
      * TODO: Adding a function for each property is not good.
