@@ -24,6 +24,7 @@ import static android.telephony.TelephonyManager.NETWORK_TYPE_UMTS;
 import static android.telephony.TelephonyManager.NETWORK_TYPE_HSDPA;
 import static android.telephony.TelephonyManager.NETWORK_TYPE_HSUPA;
 import static android.telephony.TelephonyManager.NETWORK_TYPE_HSPA;
+import static android.telephony.TelephonyManager.NETWORK_TYPE_HSPAP;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -201,7 +202,7 @@ class RILRequest {
  *
  * {@hide}
  */
-public class RIL extends BaseCommands implements CommandsInterface {
+public final class RIL extends BaseCommands implements CommandsInterface {
     static final String LOG_TAG = "RILJ";
     static final boolean RILJ_LOGD = true;
     static final boolean RILJ_LOGV = false; // STOP SHIP if true
@@ -2031,7 +2032,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
 
     //***** Private Methods
 
-    protected void sendScreenState(boolean on) {
+    private void sendScreenState(boolean on) {
         RILRequest rr = RILRequest.obtain(RIL_REQUEST_SCREEN_STATE, null);
         rr.mp.writeInt(1);
         rr.mp.writeInt(on ? 1 : 0);
@@ -2052,7 +2053,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         sendScreenState(true);
    }
 
-    protected RadioState getRadioStateFromInt(int stateInt) {
+    private RadioState getRadioStateFromInt(int stateInt) {
         RadioState state;
 
         /* RIL_RadioState ril.h */
@@ -2068,7 +2069,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return state;
     }
 
-    protected void switchToRadioState(RadioState newState) {
+    private void switchToRadioState(RadioState newState) {
         setRadioState(newState);
     }
 
@@ -2105,7 +2106,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         }
     }
 
-    protected void
+    private void
     send(RILRequest rr) {
         Message msg;
 
@@ -2122,7 +2123,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         msg.sendToTarget();
     }
 
-    protected void
+    private void
     processResponse (Parcel p) {
         int type;
 
@@ -2142,7 +2143,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
      * @param error is the RIL_Errno sent back
      * @param loggable true means to print all requests in mRequestslist
      */
-    protected void clearRequestsList(int error, boolean loggable) {
+    private void clearRequestsList(int error, boolean loggable) {
         RILRequest rr;
         synchronized (mRequestsList) {
             int count = mRequestsList.size();
@@ -2166,7 +2167,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         }
     }
 
-    protected RILRequest findAndRemoveRequestFromList(int serial) {
+    private RILRequest findAndRemoveRequestFromList(int serial) {
         synchronized (mRequestsList) {
             for (int i = 0, s = mRequestsList.size() ; i < s ; i++) {
                 RILRequest rr = mRequestsList.get(i);
@@ -2183,7 +2184,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return null;
     }
 
-    protected void
+    private void
     processSolicited (Parcel p) {
         int serial, error;
         boolean found = false;
@@ -2396,7 +2397,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         rr.release();
     }
 
-    protected String
+    private String
     retToString(int req, Object ret) {
         if (ret == null) return "";
         switch (req) {
@@ -2460,7 +2461,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return s;
     }
 
-    protected void
+    private void
     processUnsolicited (Parcel p) {
         int response;
         Object ret;
@@ -2882,7 +2883,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         }
     }
 
-    protected Object
+    private Object
     responseInts(Parcel p) {
         int numInts;
         int response[];
@@ -2899,12 +2900,12 @@ public class RIL extends BaseCommands implements CommandsInterface {
     }
 
 
-    protected Object
+    private Object
     responseVoid(Parcel p) {
         return null;
     }
 
-    protected Object
+    private Object
     responseCallForward(Parcel p) {
         int numInfos;
         CallForwardInfo infos[];
@@ -2927,7 +2928,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return infos;
     }
 
-    protected Object
+    private Object
     responseSuppServiceNotification(Parcel p) {
         SuppServiceNotification notification = new SuppServiceNotification();
 
@@ -2940,7 +2941,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return notification;
     }
 
-    protected Object
+    private Object
     responseCdmaSms(Parcel p) {
         SmsMessage sms;
         sms = SmsMessage.newFromParcel(p);
@@ -2948,7 +2949,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return sms;
     }
 
-    protected Object
+    private Object
     responseString(Parcel p) {
         String response;
 
@@ -2957,7 +2958,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return response;
     }
 
-    protected Object
+    private Object
     responseStrings(Parcel p) {
         int num;
         String response[];
@@ -2976,7 +2977,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return response;
     }
 
-    protected Object
+    private Object
     responseRaw(Parcel p) {
         int num;
         byte response[];
@@ -2986,7 +2987,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return response;
     }
 
-    protected Object
+    private Object
     responseSMS(Parcel p) {
         int messageRef, errorCode;
         String ackPDU;
@@ -3001,7 +3002,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
     }
 
 
-    protected Object
+    private Object
     responseICC_IO(Parcel p) {
         int sw1, sw2;
         byte data[] = null;
@@ -3020,7 +3021,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return new IccIoResult(sw1, sw2, s);
     }
 
-    protected Object
+    private Object
     responseIccCardStatus(Parcel p) {
         IccCardApplicationStatus appStatus;
 
@@ -3052,7 +3053,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return cardStatus;
     }
 
-    protected Object
+    private Object
     responseSimRefresh(Parcel p) {
         IccRefreshResponse response = new IccRefreshResponse();
 
@@ -3062,7 +3063,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return response;
     }
 
-    protected Object
+    private Object
     responseCallList(Parcel p) {
         int num;
         int voiceSettings;
@@ -3139,7 +3140,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return response;
     }
 
-    protected DataCallState getDataCallState(Parcel p, int version) {
+    private DataCallState getDataCallState(Parcel p, int version) {
         DataCallState dataCall = new DataCallState();
 
         dataCall.version = version;
@@ -3178,7 +3179,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return dataCall;
     }
 
-    protected Object
+    private Object
     responseDataCallList(Parcel p) {
         ArrayList<DataCallState> response;
 
@@ -3194,7 +3195,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return response;
     }
 
-    protected Object
+    private Object
     responseSetupDataCall(Parcel p) {
         int ver = p.readInt();
         int num = p.readInt();
@@ -3241,7 +3242,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return dataCall;
     }
 
-    protected Object
+    private Object
     responseOperatorInfos(Parcel p) {
         String strings[] = (String [])responseStrings(p);
         ArrayList<OperatorInfo> ret;
@@ -3266,7 +3267,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return ret;
     }
 
-    protected Object
+    private Object
     responseCellList(Parcel p) {
        int num, rssi;
        String location;
@@ -3292,6 +3293,8 @@ public class RIL extends BaseCommands implements CommandsInterface {
            radioType = NETWORK_TYPE_HSUPA;
        } else if (radioString.equals("HSPA")) {
            radioType = NETWORK_TYPE_HSPA;
+       } else if (radioString.equals("HSPAP")) {
+           radioType = NETWORK_TYPE_HSPAP;
        } else {
            radioType = NETWORK_TYPE_UNKNOWN;
        }
@@ -3308,7 +3311,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
        return response;
     }
 
-    protected Object responseGetPreferredNetworkType(Parcel p) {
+    private Object responseGetPreferredNetworkType(Parcel p) {
        int [] response = (int[]) responseInts(p);
 
        if (response.length >= 1) {
@@ -3320,7 +3323,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
        return response;
     }
 
-    protected Object responseGmsBroadcastConfig(Parcel p) {
+    private Object responseGmsBroadcastConfig(Parcel p) {
         int num;
         ArrayList<SmsBroadcastConfigInfo> response;
         SmsBroadcastConfigInfo info;
@@ -3342,7 +3345,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return response;
     }
 
-    protected Object
+    private Object
     responseCdmaBroadcastConfig(Parcel p) {
         int numServiceCategories;
         int response[];
@@ -3381,13 +3384,13 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return response;
     }
 
-    protected Object
+    private Object
     responseSignalStrength(Parcel p) {
         SignalStrength signalStrength = new SignalStrength(p);
         return signalStrength;
     }
 
-    protected ArrayList<CdmaInformationRecords>
+    private ArrayList<CdmaInformationRecords>
     responseCdmaInformationRecord(Parcel p) {
         int numberOfInfoRecs;
         ArrayList<CdmaInformationRecords> response;
@@ -3407,7 +3410,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return response;
     }
 
-    protected Object
+    private Object
     responseCdmaCallWaiting(Parcel p) {
         CdmaCallWaitingNotification notification = new CdmaCallWaitingNotification();
 
@@ -3425,7 +3428,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return notification;
     }
 
-    protected Object
+    private Object
     responseCallRing(Parcel p){
         char response[] = new char[4];
 
@@ -3437,7 +3440,7 @@ public class RIL extends BaseCommands implements CommandsInterface {
         return response;
     }
 
-    protected void
+    private void
     notifyRegistrantsCdmaInfoRec(CdmaInformationRecords infoRec) {
         int response = RIL_UNSOL_CDMA_INFO_REC;
         if (infoRec.record instanceof CdmaInformationRecords.CdmaDisplayInfoRec) {
@@ -3654,27 +3657,27 @@ public class RIL extends BaseCommands implements CommandsInterface {
         }
     }
 
-    protected void riljLog(String msg) {
+    private void riljLog(String msg) {
         Log.d(LOG_TAG, msg);
     }
 
-    protected void riljLogv(String msg) {
+    private void riljLogv(String msg) {
         Log.v(LOG_TAG, msg);
     }
 
-    protected void unsljLog(int response) {
+    private void unsljLog(int response) {
         riljLog("[UNSL]< " + responseToString(response));
     }
 
-    protected void unsljLogMore(int response, String more) {
+    private void unsljLogMore(int response, String more) {
         riljLog("[UNSL]< " + responseToString(response) + " " + more);
     }
 
-    protected void unsljLogRet(int response, Object ret) {
+    private void unsljLogRet(int response, Object ret) {
         riljLog("[UNSL]< " + responseToString(response) + " " + retToString(response, ret));
     }
 
-    protected void unsljLogvRet(int response, Object ret) {
+    private void unsljLogvRet(int response, Object ret) {
         riljLogv("[UNSL]< " + responseToString(response) + " " + retToString(response, ret));
     }
 
